@@ -5,11 +5,15 @@ import { supabase } from "@/lib/supabase"
 import { formatDate } from "@/lib/utils"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MessageReactions } from "@/components/reactions/message-reactions"
+import { MessageReplies } from "@/components/replies/message-replies"
+import { User, Clock } from "lucide-react"
 
 interface RoomMessage {
   id: string
-  content: string
+  content: string | null
   sender_username: string | null
+  image_url: string | null
   created_at: string
 }
 
@@ -102,11 +106,36 @@ export function RoomMessageList({ roomId }: RoomMessageListProps) {
       {messages.map((message) => (
         <Card key={message.id} className="overflow-hidden">
           <CardContent className="p-6">
-            <p className="whitespace-pre-wrap">{message.content}</p>
+            {/* Message Content */}
+            {message.content && <p className="whitespace-pre-wrap mb-3">{message.content}</p>}
+
+            {/* Image */}
+            {message.image_url && (
+              <div className="mb-3">
+                <img
+                  src={message.image_url || "/placeholder.svg"}
+                  alt="Message attachment"
+                  className="max-w-full max-h-96 rounded-lg border object-contain"
+                />
+              </div>
+            )}
+
+            {/* Reactions */}
+            <MessageReactions messageId={message.id} messageType="room" />
+
+            {/* Replies */}
+            <MessageReplies messageId={message.id} messageType="room" />
           </CardContent>
+
           <CardFooter className="border-t bg-muted/50 px-6 py-3 flex justify-between text-sm text-muted-foreground">
-            <span>{message.sender_username ? `From: ${message.sender_username}` : "Anonymous"}</span>
-            <span>{formatDate(message.created_at)}</span>
+            <span className="flex items-center gap-1">
+              <User className="h-3 w-3" />
+              {message.sender_username ? message.sender_username : "Anonymous"}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {formatDate(message.created_at)}
+            </span>
           </CardFooter>
         </Card>
       ))}

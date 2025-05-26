@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase"
 import { formatDate } from "@/lib/utils"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MessageReactions } from "@/components/reactions/message-reactions"
+import { MessageReplies } from "@/components/replies/message-replies"
 import { MessageSquare, User, Clock } from "lucide-react"
 
 interface Message {
@@ -108,8 +110,16 @@ export function MessageList({ recipientId }: MessageListProps) {
           style={{ animationDelay: `${index * 0.05}s` }}
         >
           <CardContent className="p-6">
-            <p className="whitespace-pre-wrap">{message.content}</p>
+            {/* Message Content */}
+            <p className="whitespace-pre-wrap mb-3">{message.content}</p>
+
+            {/* Reactions */}
+            <MessageReactions messageId={message.id} messageType="profile" />
+
+            {/* Replies */}
+            <MessageReplies messageId={message.id} messageType="profile" />
           </CardContent>
+
           <CardFooter className="border-t bg-muted/30 px-6 py-3 flex justify-between text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <User className="h-3 w-3" />

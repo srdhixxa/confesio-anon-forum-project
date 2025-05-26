@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { RoomList } from "@/components/rooms/room-list"
 import { useSupabaseStatus } from "@/lib/check-supabase"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertTriangle, MessageSquare, UserPlus, Sparkles, HelpCircle, ArrowRight } from "lucide-react"
+import { AlertTriangle, UserPlus, HelpCircle, ArrowRight, Heart, MessageCircle } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { CreateProfileForm } from "@/components/forms/create-profile-form"
 
@@ -74,24 +74,24 @@ export default function HomePage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-primary" />
-              Public & Private Rooms
+              <Heart className="h-5 w-5 text-primary" />
+              Facebook-style Reactions
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Join public discussions or create private rooms that are only accessible via direct links.</p>
+            <p>React to messages with 👍 ❤️ 😂 😮 😢 😡 - no login required, unlimited reactions!</p>
           </CardContent>
         </Card>
 
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              Real-time Messages
+              <MessageCircle className="h-5 w-5 text-primary" />
+              Reply to Messages
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Send and receive messages instantly with real-time updates. No refreshing needed.</p>
+            <p>Reply to any message in conversations. Add an optional nickname or stay completely anonymous.</p>
           </CardContent>
         </Card>
       </div>
@@ -136,8 +136,8 @@ export default function HomePage() {
                 </AccordionTrigger>
                 <AccordionContent className="pl-8">
                   <p className="mb-2">
-                    Browse and join existing public rooms, or create your own room. You can create public rooms that
-                    anyone can join, or private rooms where only invited users can participate.
+                    Browse and join existing public rooms, or create your own public room. All rooms are open for
+                    everyone to join and participate in discussions.
                   </p>
                   <div className="flex gap-4 mt-3">
                     <Link href="#public-rooms">
@@ -160,14 +160,13 @@ export default function HomePage() {
                     <span className="bg-primary/20 w-6 h-6 rounded-full flex items-center justify-center text-primary font-bold">
                       3
                     </span>
-                    Send and Receive Messages
+                    Send Messages & React
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="pl-8">
-                  <p>
-                    Once in a room, you can send messages anonymously or include your username. All messages appear in
-                    real-time, so there's no need to refresh the page. For private rooms, you can share the link with
-                    others.
+                  <p className="mb-2">
+                    Send messages with text and images. React to any message with Facebook-style reactions (👍 ❤️ 😂 😮
+                    😢 😡). No login required - just click and react!
                   </p>
                 </AccordionContent>
               </AccordionItem>
@@ -178,13 +177,13 @@ export default function HomePage() {
                     <span className="bg-primary/20 w-6 h-6 rounded-full flex items-center justify-center text-primary font-bold">
                       4
                     </span>
-                    Share Your Profile
+                    Reply to Messages
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="pl-8">
                   <p>
-                    Share your profile link with others so they can send you anonymous messages. You can copy your
-                    profile link or share it directly on social media platforms.
+                    Reply to any message in conversations. You can add an optional nickname or stay completely
+                    anonymous. Replies appear below the original message for easy conversation flow.
                   </p>
                 </AccordionContent>
               </AccordionItem>
@@ -203,12 +202,23 @@ export default function HomePage() {
 
         {showFeatures && (
           <div className="bg-accent/50 p-4 rounded-lg mb-4 animate-slide-in">
-            <h3 className="font-medium mb-2">✨ Room Features</h3>
+            <h3 className="font-medium mb-2">✨ New Features</h3>
             <ul className="list-disc pl-5 space-y-1 text-sm">
-              <li>Join any public room without registration</li>
-              <li>Send messages anonymously or with your username</li>
-              <li>Create your own rooms with custom settings</li>
-              <li>Share room links with friends</li>
+              <li>
+                🎯 <strong>Facebook-style Reactions:</strong> React with 👍 ❤️ 😂 😮 😢 😡 - no login needed!
+              </li>
+              <li>
+                💬 <strong>Reply System:</strong> Reply to any message with optional nickname
+              </li>
+              <li>
+                📸 <strong>Image Support:</strong> Upload and share images in messages
+              </li>
+              <li>
+                ⚡ <strong>Real-time Updates:</strong> See reactions and replies instantly
+              </li>
+              <li>
+                🔓 <strong>No Registration:</strong> Everything works without creating accounts
+              </li>
             </ul>
           </div>
         )}
@@ -216,7 +226,7 @@ export default function HomePage() {
         <Card>
           <CardHeader>
             <CardTitle>Join a Room</CardTitle>
-            <CardDescription>Browse and join public rooms to start chatting</CardDescription>
+            <CardDescription>Browse and join public rooms to start chatting with reactions and replies</CardDescription>
           </CardHeader>
           <CardContent>
             <Suspense fallback={<div className="py-8 text-center">Loading rooms...</div>}>

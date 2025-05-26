@@ -9,16 +9,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/use-toast"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, MessageSquare, Loader2 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export function CreateRoomForm() {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [rules, setRules] = useState("")
-  const [isPrivate, setIsPrivate] = useState(false)
   const [creatorUsername, setCreatorUsername] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [nameError, setNameError] = useState<string | null>(null)
@@ -63,14 +60,14 @@ export function CreateRoomForm() {
         userId = userData.id
       }
 
-      // Create room
+      // Create room (always public now)
       const { data, error } = await supabase
         .from("rooms")
         .insert([
           {
             name,
             description: description.trim() || null,
-            is_private: isPrivate,
+            is_private: false, // Always public
             created_by: userId,
           },
         ])
@@ -83,7 +80,7 @@ export function CreateRoomForm() {
 
       toast({
         title: "Room created",
-        description: `Your room "${name}" has been created.`,
+        description: `Your public room "${name}" has been created.`,
       })
 
       // Redirect to room page
@@ -132,21 +129,9 @@ export function CreateRoomForm() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={isLoading}
+          className="min-h-[100px]"
         />
       </div>
-
-      {isPrivate && (
-        <div className="space-y-2">
-          <Label htmlFor="rules">Room Rules (Optional)</Label>
-          <Textarea
-            id="rules"
-            placeholder="Set rules for your private room"
-            value={rules}
-            onChange={(e) => setRules(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-      )}
 
       <div className="space-y-2">
         <Label htmlFor="creator">Your Username (Optional)</Label>
@@ -157,15 +142,25 @@ export function CreateRoomForm() {
           onChange={(e) => setCreatorUsername(e.target.value)}
           disabled={isLoading}
         />
+        <p className="text-xs text-muted-foreground">If you provide a username, you'll be shown as the room creator</p>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch id="private" checked={isPrivate} onCheckedChange={setIsPrivate} disabled={isLoading} />
-        <Label htmlFor="private">Make this room private</Label>
+      <div className="bg-accent/50 p-4 rounded-lg">
+        <h3 className="font-medium mb-2 flex items-center gap-2">
+          <MessageSquare className="h-4 w-4" />
+          Public Room Features
+        </h3>
+        <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+          <li>Anyone can join and participate</li>
+          <li>Messages support text and images</li>
+          <li>Real-time reactions with emoticons</li>
+          <li>Easy sharing with friends</li>
+        </ul>
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Creating..." : "Create Room"}
+        {isLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <MessageSquare className="h-4 w-4 mr-2" />}
+        {isLoading ? "Creating..." : "Create Public Room"}
       </Button>
     </form>
   )

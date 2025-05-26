@@ -7,7 +7,7 @@ export default function CreateRoomPage() {
       <Card>
         <CardHeader>
           <CardTitle>Create Room</CardTitle>
-          <CardDescription>Create a new public or private room</CardDescription>
+          <CardDescription>Create a new public room</CardDescription>
         </CardHeader>
         <CardContent>
           <CreateRoomForm />

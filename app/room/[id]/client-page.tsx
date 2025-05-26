@@ -1,18 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { formatDate } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SendRoomMessageForm } from "@/components/forms/send-room-message-form"
 import { RoomMessageList } from "@/components/messages/room-message-list"
-import { InviteUserForm } from "@/components/forms/invite-user-form"
-import { RoomInvitations } from "@/components/rooms/room-invitations"
-import { RoomAccessCheck } from "@/components/rooms/room-access-check"
 import { RoomShare } from "@/components/rooms/room-share"
 import { RoomShareCard } from "@/components/rooms/room-share-card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { MessageSquare, Users, Lock, Unlock } from "lucide-react"
+import { MessageSquare, Unlock } from "lucide-react"
 
 interface Room {
   id: string
@@ -31,25 +27,6 @@ interface ClientRoomPageProps {
 }
 
 export function ClientRoomPage({ room }: ClientRoomPageProps) {
-  const [hasAccess, setHasAccess] = useState(!room.is_private)
-  const [currentUsername, setCurrentUsername] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (room.is_private) {
-      const storedUsername = sessionStorage.getItem(`room_access_${room.id}`)
-      if (storedUsername) {
-        setHasAccess(true)
-        setCurrentUsername(storedUsername)
-      }
-    }
-  }, [room.id, room.is_private])
-
-  if (room.is_private && !hasAccess) {
-    return <RoomAccessCheck roomId={room.id} roomName={room.name} onAccessGranted={() => setHasAccess(true)} />
-  }
-
-  const isRoomOwner = currentUsername && room.users?.username === currentUsername
-
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <Card className="overflow-hidden border-none shadow-lg">
@@ -63,10 +40,10 @@ export function ClientRoomPage({ room }: ClientRoomPageProps) {
               <div>
                 <div className="flex items-center gap-2">
                   <CardTitle className="text-2xl">{room.name}</CardTitle>
-                  <Badge variant={room.is_private ? "outline" : "secondary"}>
+                  <Badge variant="secondary">
                     <div className="flex items-center gap-1">
-                      {room.is_private ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
-                      {room.is_private ? "Private Room" : "Public Room"}
+                      <Unlock className="h-3 w-3" />
+                      Public Room
                     </div>
                   </Badge>
                 </div>
@@ -87,12 +64,7 @@ export function ClientRoomPage({ room }: ClientRoomPageProps) {
       <RoomShareCard roomId={room.id} roomName={room.name} />
 
       <Tabs defaultValue="messages" className="w-full">
-        <TabsList
-          className="grid w-full"
-          style={{
-            gridTemplateColumns: room.is_private && (isRoomOwner || currentUsername) ? "1fr 1fr 1fr" : "1fr 1fr",
-          }}
-        >
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="messages" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span>Messages</span>
@@ -101,12 +73,6 @@ export function ClientRoomPage({ room }: ClientRoomPageProps) {
             <MessageSquare className="h-4 w-4" />
             <span>Send Message</span>
           </TabsTrigger>
-          {room.is_private && (isRoomOwner || currentUsername) && (
-            <TabsTrigger value="invites" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span>Invitations</span>
-            </TabsTrigger>
-          )}
         </TabsList>
         <TabsContent value="messages" className="mt-4 animate-slide-in">
           <Card>
@@ -115,7 +81,7 @@ export function ClientRoomPage({ room }: ClientRoomPageProps) {
                 <MessageSquare className="h-4 w-4 text-primary" />
                 Messages
               </CardTitle>
-              <CardDescription>All messages in this room</CardDescription>
+              <CardDescription>All messages in this public room with reactions and replies</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <RoomMessageList roomId={room.id} />
@@ -136,31 +102,6 @@ export function ClientRoomPage({ room }: ClientRoomPageProps) {
             </CardContent>
           </Card>
         </TabsContent>
-        {room.is_private && (isRoomOwner || currentUsername) && (
-          <TabsContent value="invites" className="mt-4 animate-slide-in">
-            <Card>
-              <CardHeader className="pb-2 bg-accent/30">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="h-4 w-4 text-primary" />
-                  Invite Users
-                </CardTitle>
-                <CardDescription>Invite users to join this private room</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-6">
-                <InviteUserForm
-                  roomId={room.id}
-                  roomName={room.name}
-                  inviterUsername={currentUsername || room.users?.username || undefined}
-                />
-
-                <div className="mt-8">
-                  <h3 className="text-sm font-medium mb-4">Pending Invitations</h3>
-                  <RoomInvitations roomId={room.id} />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        )}
       </Tabs>
     </div>
   )

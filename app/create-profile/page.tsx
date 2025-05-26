@@ -6,8 +6,8 @@ export default function CreateProfilePage() {
     <div className="max-w-md mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Create Anonymous Profile</CardTitle>
-          <CardDescription>Enter a username to create your anonymous profile</CardDescription>
+          <CardTitle>Create Anonymous</CardTitle>
+          <CardDescription>Enter a username to create your anonymous</CardDescription>
         </CardHeader>
         <CardContent>
           <CreateProfileForm />
